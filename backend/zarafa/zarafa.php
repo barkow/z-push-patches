@@ -1426,6 +1426,16 @@ class BackendZarafa implements IBackend, ISearchProvider {
     }
 
     private function hasSecretaryACLs($store, $folderid) {
+        if (ZPush::isUserBlacklisted($folderid, $this->mainUser)){
+            ZLog::Write(LOGLEVEL_DEBUG, "[fka] User ".$this->mainUser." on blacklist for folder ".$folderid);
+            return false;
+        }
+        
+        if (!ZPush::isUserWhitelisted($folderid, $this->mainUser)){
+            ZLog::Write(LOGLEVEL_DEBUG, "[fka] User ".$this->mainUser." not on whitelist for folder ".$folderid);
+            return false;
+        }
+                
         $entryid = mapi_msgstore_entryidfromsourcekey($store, hex2bin($folderid));
         if (!$entryid)  return false;
 

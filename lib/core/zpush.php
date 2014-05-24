@@ -181,6 +181,8 @@ class ZPush {
     static private $topCollector;
     static private $backend;
     static private $addSyncFolders;
+    static private $blacklistedFolders;
+    static private $whitelistedFolders;
 
 
     /**
@@ -270,6 +272,8 @@ class ZPush {
             ZLog::Write(LOGLEVEL_ERROR, "ZPush::CheckConfig() : The additional folders synchronization not available as array.");
         else {
             self::$addSyncFolders = array();
+            self::$blacklistedFolders = array();
+            self::$whitelistedFolders = array();
 
             // process configured data
             foreach ($additionalFolders as $af) {
@@ -298,6 +302,15 @@ class ZPush {
                 $folder->NoBackendFolder = true;
                 $folder->Store = $af['store'];
                 self::$addSyncFolders[$folder->serverid] = $folder;
+
+                //Additional Code for black-/whitelisting of additional folders
+                if (isset($af['blacklist']) && is_array($af['blacklist'])){
+                    self::$blacklistedFolders[$af['folderid']] = $af['blacklist'];
+                }
+                if (isset($af['whitelist']) && is_array($af['whitelist'])){
+                    ZLog::Write(LOGLEVEL_DEBUG, sprintf("[fka] Generated whitelist for folder %s", $af['folderid']));
+                    self::$whitelistedFolders[$af['folderid']] = $af['whitelist'];
+                }
             }
 
         }
@@ -769,5 +782,14 @@ END;
         return $defcapa;
     }
 
+    static public function isUserBlacklisted($folderid, $username) {
+        ZLog::Write(LOGLEVEL_DEBUG, "[fka] Check blacklisting for user ".$username." on folder ".$folderid);
+        return isset(self::$blacklistedFolders[$folderid]) && in_array($username, self::$blacklistedFolders[$folderid]);
+    }
+
+    static public function isUserWhitelisted($folderid, $username) {
+        ZLog::Write(LOGLEVEL_DEBUG, "[fka] Check whitelisting for user ".$username." on folder ".$folderid);
+        return !isset(self::$whitelistedFolders[$folderid]) || in_array($username, self::$whitelistedFolders[$folderid]);
+    }
 }
 ?>
