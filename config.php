@@ -79,7 +79,7 @@
     define('LOGFILEDIR', '/var/log/z-push/');
     define('LOGFILE', LOGFILEDIR . 'z-push.log');
     define('LOGERRORFILE', LOGFILEDIR . 'z-push-error.log');
-    define('LOGLEVEL', LOGLEVEL_DEBUG);
+    define('LOGLEVEL', LOGLEVEL_INFO);
     define('LOGAUTHFAIL', false);
 
 
@@ -276,20 +276,20 @@
     $additionalFolders = array(
         // demo entry for the synchronization of contacts from the public folder.
         // uncomment (remove '/*' '*/') and fill in the folderid
-
+/*
         array(
             'store'     => "SYSTEM",
-            'folderid'  => "d87541ff8fb04fa9b6488caf98ac97512000000000000000",
+            'folderid'  => "",
             'name'      => "Public Contacts",
             'type'      => SYNC_FOLDER_TYPE_USER_CONTACT,
             //Define blacklist for folder. All users that are define on blacklist will not sync this folder.
             //'blacklist' => array('username1', 'username2'),
             //Define whitelist for folder. Only users that are define on whitelist will sync this folder.
             //ATTENTION: Emtpy array in whitelist will disallow sync for all users.
-            //If no whitelist shall be defined, remove complete line. 
-            //'whitelist' => array('Username1', 'Username2'),
+            //If no whitelist shall be defined, remove complete line.
+            //'whitelist' => array('username1', 'username2'),
         ),
-
+*/
     );
 
 ?>
